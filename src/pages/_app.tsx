@@ -1,7 +1,6 @@
 import { ThemeProvider, CSSReset } from "@chakra-ui/core";
 import { Provider, createClient } from "urql";
-
-import { Navbar } from "../components/Navbar";
+import { Layout } from "../components/Layout";
 
 import theme from "../theme";
 
@@ -17,7 +16,7 @@ function MyApp({ Component, pageProps }: any) {
     <Provider value={client}>
       <ThemeProvider theme={theme}>
         <CSSReset />
-        <Navbar />
+        <Layout />
         <Component {...pageProps} />
       </ThemeProvider>
     </Provider>

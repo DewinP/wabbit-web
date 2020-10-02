@@ -1,5 +1,5 @@
-query Posts {
-  posts {
+mutation CreatePost($options: PostInput!) {
+  createPost(options: $options) {
     id
     title
     body

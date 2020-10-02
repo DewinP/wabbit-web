@@ -1,4 +1,12 @@
-import { Box, Button, Flex, Heading, Link, Text } from "@chakra-ui/core";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link,
+  Text,
+  useToast,
+} from "@chakra-ui/core";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
 import { InputField } from "../components/InputField";
@@ -8,6 +16,7 @@ import { useForgotPasswordMutation } from "../generated/graphql";
 const forgotPassword: React.FC<{}> = ({}) => {
   const [, forgotPassword] = useForgotPasswordMutation();
   const [completed, setCompleted] = useState(false);
+  const toast = useToast();
   return (
     <Wrapper variant="small">
       <Formik
@@ -48,6 +57,16 @@ const forgotPassword: React.FC<{}> = ({}) => {
                   isLoading={isSubmitting}
                   variantColor="teal"
                   type="submit"
+                  onClick={() =>
+                    toast({
+                      title: "Email Sent.",
+                      description:
+                        "We've have sent you a email to recover your password",
+                      status: "success",
+                      duration: 9000,
+                      isClosable: true,
+                    })
+                  }
                 >
                   Email me
                 </Button>

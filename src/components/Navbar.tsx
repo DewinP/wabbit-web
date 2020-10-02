@@ -1,4 +1,21 @@
-import { Box, Button, Flex, Link } from "@chakra-ui/core";
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Icon,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Link,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/core";
 import React from "react";
 import NextLink from "next/link";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
@@ -9,6 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery();
   let body = null;
+  console.log(data?.me?.avatar);
   //data is loading
   if (fetching) {
     //user not logged in
@@ -26,21 +44,44 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
     );
   } else {
     body = (
-      <Flex>
-        <Box mr={3}>{data.me.username}</Box>
-        <Button
-          variant="link"
-          isLoading={logoutFetching}
-          onClick={() => logout()}
-        >
-          logout
-        </Button>
+      <Flex align="center">
+        <Menu>
+          <MenuButton as={Button} variant="unstyled" rightIcon="arrow-down">
+            <Avatar mr={1} size="xs" src={data.me.avatar} />
+            {data.me.username}
+          </MenuButton>
+          <MenuList>
+            <MenuGroup title="Profile">
+              <MenuItem>My Profile</MenuItem>
+              <MenuItem>User Settings </MenuItem>
+            </MenuGroup>
+            <MenuDivider />
+            <MenuItem onClick={() => logout()}>Logout</MenuItem>
+          </MenuList>
+        </Menu>
       </Flex>
     );
   }
   return (
-    <Flex p={3} bg="tomato">
-      <Box ml={"auto"}>{body}</Box>
-    </Flex>
+    <Box
+      position="sticky"
+      top={0}
+      zIndex={1}
+      bg="white"
+      borderBottom="1px solid #bdbdc2"
+      p={1}
+    >
+      <Flex w="80%" ml="auto" align="center">
+        <InputGroup w="50%">
+          <InputLeftElement
+            children={<Icon name="search" color="gray.300" />}
+          />
+          <Input placeholder="Search" variant="unstyled" />
+        </InputGroup>
+        <Box ml={"auto"} mr="10px">
+          {body}
+        </Box>
+      </Flex>
+    </Box>
   );
 };

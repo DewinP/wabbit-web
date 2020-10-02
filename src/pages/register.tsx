@@ -15,7 +15,7 @@ const Register: React.FC<registerProps> = ({}) => {
   return (
     <Wrapper variant="small">
       <Formik
-        initialValues={{ username: "", email: "", password: "" }}
+        initialValues={{ username: "", email: "", password: "", avatar: "" }}
         onSubmit={async (values, { setErrors }) => {
           const response = await register({ options: values });
           //keys line up exactly with the values of the mutation so i can pass just the object values
@@ -36,6 +36,13 @@ const Register: React.FC<registerProps> = ({}) => {
             />
             <Box mt={4}>
               <InputField name="email" placeholder="email" label="Email" />
+            </Box>
+            <Box mt={4}>
+              <InputField
+                name="avatar"
+                placeholder="https://example.com/example.jpg"
+                label="Profile Picture URL"
+              />
             </Box>
             <Box mt={4}>
               <InputField
