@@ -1,13 +1,4 @@
-import {
-  Link as ChakraLink,
-  Text,
-  Code,
-  Icon,
-  List,
-  ListIcon,
-  ListItem,
-  Box,
-} from "@chakra-ui/core";
+import { Link as ChakraLink, Box } from "@chakra-ui/core";
 import React from "react";
 import { PostItem } from "../components/PostItem";
 import { Wrapper } from "../components/Wrapper";
@@ -16,7 +7,7 @@ import { usePostsQuery } from "../generated/graphql";
 const Index = () => {
   const [{ data }] = usePostsQuery();
   return (
-    <Wrapper>
+    <Box border="1px solid #bdbdc2">
       {!data ? (
         <div>loading...</div>
       ) : (
@@ -24,7 +15,7 @@ const Index = () => {
           return <PostItem key={p.id} postInfo={p} />;
         })
       )}
-    </Wrapper>
+    </Box>
   );
 };
 

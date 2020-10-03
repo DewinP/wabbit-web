@@ -46,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
     body = (
       <Flex align="center">
         <Menu>
-          <MenuButton as={Button} variant="unstyled" rightIcon="arrow-down">
+          <MenuButton as={Button} variant="link" rightIcon="arrow-down">
             <Avatar mr={1} size="xs" src={data.me.avatar} />
             {data.me.username}
           </MenuButton>
@@ -67,11 +67,13 @@ export const Navbar: React.FC<NavbarProps> = ({}) => {
       position="sticky"
       top={0}
       zIndex={1}
-      bg="white"
       borderBottom="1px solid #bdbdc2"
-      p={1}
+      p="5px"
+      w="100%"
+      bg="white"
+      ml="auto"
     >
-      <Flex w="80%" ml="auto" align="center">
+      <Flex align="center">
         <InputGroup w="50%">
           <InputLeftElement
             children={<Icon name="search" color="gray.300" />}

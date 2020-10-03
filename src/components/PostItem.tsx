@@ -1,7 +1,18 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/core";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Image,
+  Link,
+  Text,
+} from "@chakra-ui/core";
 import React from "react";
 import { Post } from "../generated/graphql";
 import { timeSinceCreated } from "../utils/timeSinceCreated";
+
+import NextLink from "next/link";
 
 interface PostItemProps {
   postInfo: Post;
@@ -10,16 +21,26 @@ interface PostItemProps {
 export const PostItem: React.FC<PostItemProps> = ({ postInfo }) => {
   const timeSincePost = timeSinceCreated(postInfo.createdAt);
   return (
-    <Flex h="100px" border="1px solid #bdbdc2" align="center">
-      <Image src="https://picsum.photos/125/75" p="10px" borderRadius="12px" />
-      <Flex justify="center" direction="column">
-        <Text fontSize="18px" fontWeight="bold">
-          {postInfo.title}
-        </Text>
-        <Flex>
-          <Text fontSize="12px" fontWeight="bold">
+    <Flex h="100px" align="center" m="1px" borderBottom="1px solid #bdbdc2">
+      <Flex justify="center" direction="column" ml="30px">
+        <NextLink href="/w/[id]" as={`/w/${postInfo.id}`}>
+          <Link>
+            <Text fontSize="18px" fontWeight="bold">
+              {postInfo.title}
+            </Text>
+          </Link>
+        </NextLink>
+
+        <Flex direction="row">
+          <Text fontSize="12px" fontWeight="light" mr={1}>
             {timeSincePost} by
           </Text>
+          <Button variant="link">
+            <Avatar size="2xs" src={postInfo.creator.avatar} mr={1} />
+            <Text fontSize="12px" color="#f08a5d" fontWeight="bold">
+              {postInfo.creator.username}
+            </Text>
+          </Button>
         </Flex>
       </Flex>
       <Flex
@@ -29,8 +50,15 @@ export const PostItem: React.FC<PostItemProps> = ({ postInfo }) => {
         borderLeft="1px solid #bdbdc2"
         align="center"
         justify="center"
+        direction="column"
       >
-        {postInfo.votes}
+        <Button size="sm" variant="ghost">
+          <Icon name="chevron-up" size="2em" color="#00adb5" />
+        </Button>
+        <Text>{postInfo.votes}</Text>
+        <Button size="sm" variant="ghost">
+          <Icon name="chevron-down" size="2em" color="#f38181" />
+        </Button>
       </Flex>
     </Flex>
   );

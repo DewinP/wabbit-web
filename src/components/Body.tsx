@@ -1,3 +1,4 @@
+import { Box, Flex } from "@chakra-ui/core";
 import React from "react";
 import { Wrapper } from "./Wrapper";
 

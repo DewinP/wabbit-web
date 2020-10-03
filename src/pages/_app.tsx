@@ -16,8 +16,7 @@ function MyApp({ Component, pageProps }: any) {
     <Provider value={client}>
       <ThemeProvider theme={theme}>
         <CSSReset />
-        <Layout />
-        <Component {...pageProps} />
+        <Layout Component={Component} pageProps={pageProps} />
       </ThemeProvider>
     </Provider>
   );

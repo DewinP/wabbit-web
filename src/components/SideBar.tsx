@@ -22,12 +22,11 @@ export const SideBar: React.FC<SideBarProps> = ({}) => {
     <Box
       background="#fafbfc"
       maxW="300px"
+      mr="auto"
       w="20%"
       h="100vh"
-      top={0}
-      position="fixed"
       padding="10px"
-      zIndex={2}
+      top={0}
     >
       <Box mb="40px" w="85%" mx="auto">
         <Heading size="lg">Wabbit</Heading>

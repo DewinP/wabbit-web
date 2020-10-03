@@ -1,5 +1,5 @@
-query Posts {
-  posts {
+query Post($id: Int!) {
+  post(id: $id) {
     id
     title
     body
@@ -9,6 +9,7 @@ query Posts {
     votes
     creatorId
     creator {
+      id
       username
       avatar
     }
