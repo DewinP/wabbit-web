@@ -9,10 +9,11 @@ import {
   Text,
 } from "@chakra-ui/core";
 import React from "react";
-import { Post } from "../generated/graphql";
+import { Post, useGetCommentsByPostIdQuery } from "../generated/graphql";
 import { timeSinceCreated } from "../utils/timeSinceCreated";
 
 import NextLink from "next/link";
+import { PostButtons } from "./PostButtons";
 
 interface PostItemProps {
   postInfo: Post;
@@ -20,9 +21,13 @@ interface PostItemProps {
 
 export const PostItem: React.FC<PostItemProps> = ({ postInfo }) => {
   const timeSincePost = timeSinceCreated(postInfo.createdAt);
+  const [{ data }] = useGetCommentsByPostIdQuery({
+    variables: { postId: postInfo.id },
+  });
+  let commentsLength = data?.getCommentsByPostId.length;
   return (
-    <Flex h="100px" align="center" m="1px" borderBottom="1px solid #bdbdc2">
-      <Flex justify="center" direction="column" ml="30px">
+    <Flex align="center" m="1px" borderBottom="1px solid #bdbdc2">
+      <Flex justify="center" direction="column" ml="30px" mt="25px">
         <NextLink href="/w/[id]" as={`/w/${postInfo.id}`}>
           <Link>
             <Text fontSize="18px" fontWeight="bold">
@@ -37,11 +42,12 @@ export const PostItem: React.FC<PostItemProps> = ({ postInfo }) => {
           </Text>
           <Button variant="link">
             <Avatar size="2xs" src={postInfo.creator.avatar} mr={1} />
-            <Text fontSize="12px" color="#f08a5d" fontWeight="bold">
+            <Text fontSize="12px" color="#f08a5d" fontWeight="medium">
               {postInfo.creator.username}
             </Text>
           </Button>
         </Flex>
+        <PostButtons commentsAmmount={commentsLength} />
       </Flex>
       <Flex
         h="100%"
@@ -53,11 +59,11 @@ export const PostItem: React.FC<PostItemProps> = ({ postInfo }) => {
         direction="column"
       >
         <Button size="sm" variant="ghost">
-          <Icon name="chevron-up" size="2em" color="#00adb5" />
+          <Icon name="chevron-up" size="2em" />
         </Button>
         <Text>{postInfo.votes}</Text>
         <Button size="sm" variant="ghost">
-          <Icon name="chevron-down" size="2em" color="#f38181" />
+          <Icon name="chevron-down" size="2em" />
         </Button>
       </Flex>
     </Flex>

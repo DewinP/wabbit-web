@@ -1,20 +1,15 @@
-query Posts {
-  posts {
+query GetCommentsByPostId($postId: Int!) {
+  getCommentsByPostId(postId: $postId) {
     id
-    title
     body
-    votes
+    wasUpdated
     createdAt
     updatedAt
     votes
-    creatorId
     creator {
       id
       username
       avatar
-      email
-      createdAt
-      updatedAt
     }
   }
 }

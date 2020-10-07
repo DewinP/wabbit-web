@@ -1,11 +1,12 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import { Wrapper } from "../components/Wrapper";
-import { Box, Button } from "@chakra-ui/core";
+import { Box, Button, Flex, Heading, Link } from "@chakra-ui/core";
 import { InputField } from "../components/InputField";
 import { useRegisterMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
+import NextLink from "next/link";
 
 interface registerProps {}
 
@@ -14,6 +15,9 @@ const Register: React.FC<registerProps> = ({}) => {
   const [, register] = useRegisterMutation();
   return (
     <Wrapper variant="small">
+      <Heading mb={5} bg="tomato" textAlign="center" color="white">
+        JOIN WABBIT!
+      </Heading>
       <Formik
         initialValues={{ username: "", email: "", password: "", avatar: "" }}
         onSubmit={async (values, { setErrors }) => {
@@ -60,6 +64,11 @@ const Register: React.FC<registerProps> = ({}) => {
             >
               Register
             </Button>
+            <Flex justify="flex-end">
+              <NextLink href="/forgot-password">
+                <Link>Login instead?</Link>
+              </NextLink>
+            </Flex>
           </Form>
         )}
       </Formik>

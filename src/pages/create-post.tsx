@@ -3,7 +3,7 @@ import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
 import { InputField } from "../components/InputField";
-import { Layout } from "../components/Layout";
+
 import { Wrapper } from "../components/Wrapper";
 import { useCreatePostMutation } from "../generated/graphql";
 
@@ -11,7 +11,7 @@ const createPost: React.FC<{}> = ({}) => {
   const router = useRouter();
   const [, createPost] = useCreatePostMutation();
   return (
-    <Wrapper variant="small">
+    <Wrapper>
       <Formik
         initialValues={{ title: "", body: "" }}
         onSubmit={async (values, { setErrors }) => {
@@ -26,18 +26,24 @@ const createPost: React.FC<{}> = ({}) => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <InputField name="title" placeholder="post title" label="Title" />
-            <Box>
-              <InputField name="body" placeholder="...content here" textarea />
-            </Box>
-            <Button
-              mt={4}
-              isLoading={isSubmitting}
-              variantColor="teal"
-              type="submit"
-            >
-              publish
-            </Button>
+            <Flex direction="column">
+              <InputField name="title" placeholder="post title" label="Title" />
+              <Box>
+                <InputField
+                  name="body"
+                  placeholder="...content here"
+                  textarea
+                />
+              </Box>
+              <Button
+                mt={4}
+                isLoading={isSubmitting}
+                variantColor="teal"
+                type="submit"
+              >
+                publish
+              </Button>
+            </Flex>
           </Form>
         )}
       </Formik>

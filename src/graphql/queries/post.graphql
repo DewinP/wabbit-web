@@ -12,6 +12,9 @@ query Post($id: Int!) {
       id
       username
       avatar
+      email
+      createdAt
+      updatedAt
     }
   }
 }

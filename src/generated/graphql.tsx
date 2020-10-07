@@ -14,11 +14,12 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  hello: Scalars['String'];
   posts: Array<Post>;
   post: Post;
   user?: Maybe<User>;
   me?: Maybe<User>;
+  comments: Array<Comment>;
+  getCommentsByPostId: Array<Comment>;
 };
 
 
@@ -29,6 +30,11 @@ export type QueryPostArgs = {
 
 export type QueryUserArgs = {
   id: Scalars['Float'];
+};
+
+
+export type QueryGetCommentsByPostIdArgs = {
+  postId: Scalars['Int'];
 };
 
 export type Post = {
@@ -53,6 +59,20 @@ export type User = {
   updatedAt: Scalars['String'];
 };
 
+export type Comment = {
+  __typename?: 'Comment';
+  id: Scalars['Float'];
+  body: Scalars['String'];
+  votes: Scalars['Float'];
+  postId: Scalars['Float'];
+  post: Post;
+  creatorId: Scalars['Float'];
+  creator: User;
+  wasUpdated: Scalars['Boolean'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createPost: Post;
@@ -63,6 +83,8 @@ export type Mutation = {
   register: UserResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
+  createComment: Comment;
+  updateComment: Comment;
 };
 
 
@@ -103,6 +125,18 @@ export type MutationLoginArgs = {
   usernameOrEmail: Scalars['String'];
 };
 
+
+export type MutationCreateCommentArgs = {
+  postId: Scalars['Float'];
+  body: Scalars['String'];
+};
+
+
+export type MutationUpdateCommentArgs = {
+  body: Scalars['String'];
+  id: Scalars['Float'];
+};
+
 export type PostInput = {
   title: Scalars['String'];
   body: Scalars['String'];
@@ -135,6 +169,20 @@ export type RegularErrorFragment = (
 export type RegularUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'username' | 'email' | 'avatar'>
+);
+
+export type CreateCommentMutationVariables = Exact<{
+  body: Scalars['String'];
+  postId: Scalars['Float'];
+}>;
+
+
+export type CreateCommentMutation = (
+  { __typename?: 'Mutation' }
+  & { createComment: (
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id' | 'body' | 'creatorId' | 'votes' | 'updatedAt' | 'createdAt' | 'wasUpdated'>
+  ) }
 );
 
 export type ChangePasswordMutationVariables = Exact<{
@@ -227,6 +275,23 @@ export type RegisterMutation = (
   ) }
 );
 
+export type GetCommentsByPostIdQueryVariables = Exact<{
+  postId: Scalars['Int'];
+}>;
+
+
+export type GetCommentsByPostIdQuery = (
+  { __typename?: 'Query' }
+  & { getCommentsByPostId: Array<(
+    { __typename?: 'Comment' }
+    & Pick<Comment, 'id' | 'body' | 'wasUpdated' | 'createdAt' | 'updatedAt' | 'votes'>
+    & { creator: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'avatar'>
+    ) }
+  )> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -250,7 +315,7 @@ export type PostQuery = (
     & Pick<Post, 'id' | 'title' | 'body' | 'votes' | 'createdAt' | 'updatedAt' | 'creatorId'>
     & { creator: (
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'username' | 'avatar'>
+      & Pick<User, 'id' | 'username' | 'avatar' | 'email' | 'createdAt' | 'updatedAt'>
     ) }
   ) }
 );
@@ -265,7 +330,7 @@ export type PostsQuery = (
     & Pick<Post, 'id' | 'title' | 'body' | 'votes' | 'createdAt' | 'updatedAt' | 'creatorId'>
     & { creator: (
       { __typename?: 'User' }
-      & Pick<User, 'username' | 'avatar'>
+      & Pick<User, 'id' | 'username' | 'avatar' | 'email' | 'createdAt' | 'updatedAt'>
     ) }
   )> }
 );
@@ -284,6 +349,23 @@ export const RegularUserFragmentDoc = gql`
   avatar
 }
     `;
+export const CreateCommentDocument = gql`
+    mutation CreateComment($body: String!, $postId: Float!) {
+  createComment(body: $body, postId: $postId) {
+    id
+    body
+    creatorId
+    votes
+    updatedAt
+    createdAt
+    wasUpdated
+  }
+}
+    `;
+
+export function useCreateCommentMutation() {
+  return Urql.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument);
+};
 export const ChangePasswordDocument = gql`
     mutation ChangePassword($token: String!, $newPassword: String!) {
   changePassword(token: $token, newPassword: $newPassword) {
@@ -371,6 +453,27 @@ ${RegularUserFragmentDoc}`;
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
+export const GetCommentsByPostIdDocument = gql`
+    query GetCommentsByPostId($postId: Int!) {
+  getCommentsByPostId(postId: $postId) {
+    id
+    body
+    wasUpdated
+    createdAt
+    updatedAt
+    votes
+    creator {
+      id
+      username
+      avatar
+    }
+  }
+}
+    `;
+
+export function useGetCommentsByPostIdQuery(options: Omit<Urql.UseQueryArgs<GetCommentsByPostIdQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetCommentsByPostIdQuery>({ query: GetCommentsByPostIdDocument, ...options });
+};
 export const MeDocument = gql`
     query Me {
   me {
@@ -397,6 +500,9 @@ export const PostDocument = gql`
       id
       username
       avatar
+      email
+      createdAt
+      updatedAt
     }
   }
 }
@@ -417,8 +523,12 @@ export const PostsDocument = gql`
     votes
     creatorId
     creator {
+      id
       username
       avatar
+      email
+      createdAt
+      updatedAt
     }
   }
 }

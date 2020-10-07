@@ -13,11 +13,13 @@ import {
   Avatar,
   PseudoBox,
 } from "@chakra-ui/core";
+import { useRouter } from "next/router";
 import React from "react";
 
 interface SideBarProps {}
 
 export const SideBar: React.FC<SideBarProps> = ({}) => {
+  const router = useRouter();
   return (
     <Box
       background="#fafbfc"
@@ -26,10 +28,15 @@ export const SideBar: React.FC<SideBarProps> = ({}) => {
       w="20%"
       h="100vh"
       padding="10px"
+      position="sticky"
       top={0}
     >
       <Box mb="40px" w="85%" mx="auto">
-        <Heading size="lg">Wabbit</Heading>
+        <Button variant="ghost">
+          <Heading onClick={() => router.push("/")} size="lg">
+            Wabbit
+          </Heading>
+        </Button>
       </Box>
       <Box w="85%" mx="auto" mb="30px">
         <Heading size="sm"> FAVORITES</Heading>
